@@ -1,0 +1,4 @@
+[run]
+omit =
+    cache_pyramid/adapters/base_adapter.py
+    
