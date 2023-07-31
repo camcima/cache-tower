@@ -1,0 +1,4 @@
+[run]
+omit =
+    cache_tower/adapters/base_adapter.py
+    
