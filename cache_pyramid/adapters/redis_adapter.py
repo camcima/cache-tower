@@ -4,35 +4,28 @@ import redis
 
 
 class RedisAdapter(BaseAdapter):
-    def __init__(
-        self,
-        host: str = "localhost",
-        port: int = 6379,
-        db: int = 0,
-        password: Optional[str] = None,
-    ):
-        self.redis_client = redis.Redis(
-            host=host, port=port, db=db, password=password, decode_responses=True
-        )
+    def __init__(self, params: dict, namespace: str = "", ttl: int = 0) -> None:
+        super().__init__(params, namespace, ttl)
+        self.redis_client = redis.Redis(**params)
 
     def get(self, key: str) -> Any:
-        return self.redis_client.get(key)
+        return self.redis_client.get(self._create_key(key))
 
     def mget(self, keys: List[str]) -> Dict[str, Optional[Any]]:
-        values = self.redis_client.mget(keys)
+        values = self.redis_client.mget(self._create_keys(keys))
         return dict(zip(keys, values))
 
     def set(self, key: str, value: Any) -> None:
-        self.redis_client.set(key, value)
+        self.redis_client.set(self._create_key(key), value)
 
     def mset(self, items: Dict[str, Any]) -> None:
-        self.redis_client.mset(items)  # type: ignore
+        self.redis_client.mset(self._create_items(items))  # type: ignore
 
     def delete(self, key: str) -> None:
-        self.redis_client.delete(key)
+        self.redis_client.delete(self._create_key(key))
 
     def exists(self, key: str) -> bool:
-        return bool(self.redis_client.exists(key))
+        return bool(self.redis_client.exists(self._create_key(key)))
 
     def flush(self) -> None:
         self.redis_client.flushdb()

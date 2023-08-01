@@ -1,4 +1,5 @@
 from cache_pyramid.adapters.memory_adapter import MemoryAdapter
+from cache_pyramid.adapters.redis_adapter import RedisAdapter
 from cache_pyramid.cache_pyramid import CachePyramid
 import pytest
 
@@ -7,15 +8,53 @@ def test_initialize_class():
     with pytest.raises(TypeError):
         CachePyramid()  # Invalid initialization
 
-    empty_cache = CachePyramid([])
-    assert isinstance(empty_cache, CachePyramid)
+    zero_layer_cache = CachePyramid({})
+    assert isinstance(zero_layer_cache, CachePyramid)
+
+    one_layer_cache = CachePyramid([{"adapter": "memory"}])
+    assert isinstance(one_layer_cache, CachePyramid)
+    assert len(one_layer_cache.getAdapters()) == 1
+
+    two_layer_cache = CachePyramid([{"adapter": "memory"}, {"adapter": "memory"}])
+    assert isinstance(two_layer_cache, CachePyramid)
+    assert len(two_layer_cache.getAdapters()) == 2
+
+    three_layer_cache = CachePyramid(
+        [{"adapter": "memory"}, {"adapter": "memory"}, {"adapter": "memory"}]
+    )
+    assert isinstance(three_layer_cache, CachePyramid)
+    assert len(three_layer_cache.getAdapters()) == 3
+
+    redis_cache = CachePyramid(
+        [
+            {"adapter": "memory", "namespace": "namespace-", "ttl": 60, "params": {}},
+            {
+                "adapter": "redis",
+                "namespace": "redis-",
+                "ttl": 3600,
+                "params": {
+                    "host": "localhost",
+                    "port": 6379,
+                    "db": 0,
+                    "decode_responses": True,
+                },
+            },
+        ]
+    )
+    redis_cache_adapters = redis_cache.getAdapters()
+    assert isinstance(three_layer_cache, CachePyramid)
+    assert len(redis_cache_adapters) == 2
+    assert isinstance(redis_cache_adapters[0], MemoryAdapter)
+    assert isinstance(redis_cache_adapters[1], RedisAdapter)
 
 
 def test_get_adapters():
     layer0 = MemoryAdapter()
     layer1 = MemoryAdapter()
 
-    cache = CachePyramid([layer0, layer1])
+    cache = CachePyramid({})
+    cache.setAdapter(layer0, 0)
+    cache.setAdapter(layer1, 1)
 
     result = cache.getAdapters()
 
@@ -64,7 +103,8 @@ def test_set_adapter():
     layer0 = MemoryAdapter()
     layer1 = MemoryAdapter()
 
-    cache = CachePyramid([layer0, layer1])
+    cache = CachePyramid([])
+    cache.setAdapters([layer0, layer1])
     adapters = cache.getAdapters()
     assert adapters[0] is layer0
     assert adapters[1] is layer1
