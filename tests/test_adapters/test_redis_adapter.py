@@ -15,30 +15,32 @@ def redis_client() -> Iterator[redis.Redis]:
 def test_get(redis_client: redis.Redis):
     adapter = RedisAdapter(
         {"host": "localhost", "port": 6379, "db": 0, "decode_responses": True},
-        "namespace-",
+        "namespace:",
         60,
     )
 
-    redis_client.set("namespace-key", "value")
+    redis_client.set("namespace:key", "value")
     print(redis_client.keys())
 
-    assert redis_client.get("namespace-key") == "value"
+    assert redis_client.get("namespace:key") == "value"
     assert adapter.get("key") == "value"
 
 
 def test_set(redis_client: redis.Redis):
     adapter = RedisAdapter(
         {"host": "localhost", "port": 6379, "db": 0, "decode_responses": True},
-        "namespace-",
+        "namespace:",
         60,
     )
 
-    assert redis_client.exists("namespace-key") == 0
+    assert redis_client.exists("namespace:key") == 0
 
     adapter.set("key", "value")
 
-    assert redis_client.exists("namespace-key") == 1
-    assert redis_client.get("namespace-key") == "value"
+    assert redis_client.exists("namespace:key") == 1
+    assert redis_client.get("namespace:key") == "value"
+    assert redis_client.ttl("namespace:key") > 59
+    assert redis_client.ttl("namespace:key") <= 60
     assert adapter.exists("key")
     assert adapter.get("key") == "value"
 
@@ -46,33 +48,33 @@ def test_set(redis_client: redis.Redis):
 def test_delete(redis_client: redis.Redis):
     adapter = RedisAdapter(
         {"host": "localhost", "port": 6379, "db": 0, "decode_responses": True},
-        "namespace-",
+        "namespace:",
         60,
     )
 
-    redis_client.set("namespace-key", "value")
-    assert redis_client.exists("namespace-key") == 1
+    redis_client.set("namespace:key", "value")
+    assert redis_client.exists("namespace:key") == 1
 
     adapter.delete("key")
-    assert redis_client.exists("namespace-key") == 0
+    assert redis_client.exists("namespace:key") == 0
 
 
 def test_mget(redis_client: redis.Redis):
     adapter = RedisAdapter(
         {"host": "localhost", "port": 6379, "db": 0, "decode_responses": True},
-        "namespace-",
+        "namespace:",
         60,
     )
 
-    redis_client.set("namespace-key1", "value1")
-    redis_client.set("namespace-key2", "value2")
-    redis_client.set("namespace-key3", "value3")
-    assert redis_client.exists("namespace-key1") == 1
-    assert redis_client.exists("namespace-key2") == 1
-    assert redis_client.exists("namespace-key3") == 1
-    assert redis_client.get("namespace-key1") == "value1"
-    assert redis_client.get("namespace-key2") == "value2"
-    assert redis_client.get("namespace-key3") == "value3"
+    redis_client.set("namespace:key1", "value1")
+    redis_client.set("namespace:key2", "value2")
+    redis_client.set("namespace:key3", "value3")
+    assert redis_client.exists("namespace:key1") == 1
+    assert redis_client.exists("namespace:key2") == 1
+    assert redis_client.exists("namespace:key3") == 1
+    assert redis_client.get("namespace:key1") == "value1"
+    assert redis_client.get("namespace:key2") == "value2"
+    assert redis_client.get("namespace:key3") == "value3"
 
     result = adapter.mget(["key1", "key2"])
 
@@ -86,25 +88,29 @@ def test_mget(redis_client: redis.Redis):
 def test_mset(redis_client: redis.Redis):
     adapter = RedisAdapter(
         {"host": "localhost", "port": 6379, "db": 0, "decode_responses": True},
-        "namespace-",
+        "namespace:",
         60,
     )
 
-    assert redis_client.exists("namespace-key1") == 0
-    assert redis_client.exists("namespace-key2") == 0
+    assert redis_client.exists("namespace:key1") == 0
+    assert redis_client.exists("namespace:key2") == 0
 
     adapter.mset({"key1": "value1", "key2": "value2"})
 
-    assert redis_client.exists("namespace-key1") == 1
-    assert redis_client.exists("namespace-key2") == 1
-    assert redis_client.get("namespace-key1") == "value1"
-    assert redis_client.get("namespace-key2") == "value2"
+    assert redis_client.exists("namespace:key1") == 1
+    assert redis_client.exists("namespace:key2") == 1
+    assert redis_client.get("namespace:key1") == "value1"
+    assert redis_client.get("namespace:key2") == "value2"
+    assert redis_client.ttl("namespace:key1") > 59
+    assert redis_client.ttl("namespace:key1") <= 60
+    assert redis_client.ttl("namespace:key2") > 59
+    assert redis_client.ttl("namespace:key2") <= 60
 
 
 def test_flush():
     adapter = RedisAdapter(
         {"host": "localhost", "port": 6379, "db": 0, "decode_responses": True},
-        "namespace-",
+        "namespace:",
         60,
     )
 
