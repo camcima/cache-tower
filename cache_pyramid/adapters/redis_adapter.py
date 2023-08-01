@@ -26,7 +26,7 @@ class RedisAdapter(BaseAdapter):
         self.redis_client.set(key, value)
 
     def mset(self, items: Dict[str, Any]) -> None:
-        self.redis_client.mset(items) # type: ignore
+        self.redis_client.mset(items)  # type: ignore
 
     def delete(self, key: str) -> None:
         self.redis_client.delete(key)
