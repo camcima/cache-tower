@@ -22,13 +22,13 @@ def test_set_maxsize():
     assert adapter.get("key1") == "value1"
 
     adapter.set("key3", "value3")
-    assert adapter.get("key1") == None
+    assert adapter.get("key1") is None
     assert adapter.get("key3") == "value3"
     assert adapter.get("key2") == "value2"
 
     adapter.set("key4", "value4")
-    assert adapter.get("key1") == None
-    assert adapter.get("key2") == None
+    assert adapter.get("key1") is None
+    assert adapter.get("key2") is None
     assert adapter.get("key3") == "value3"
     assert adapter.get("key4") == "value4"
 
@@ -46,12 +46,12 @@ def test_set_maxsize_lru():
     adapter.set("key3", "value3")
     assert adapter.get("key3") == "value3"
     assert adapter.get("key1") == "value1"
-    assert adapter.get("key2") == None
+    assert adapter.get("key2") is None
 
     adapter.set("key4", "value4")
     assert adapter.get("key1") == "value1"
-    assert adapter.get("key2") == None
-    assert adapter.get("key3") == None
+    assert adapter.get("key2") is None
+    assert adapter.get("key3") is None
     assert adapter.get("key4") == "value4"
 
 
@@ -67,7 +67,7 @@ def test_get_expired_key():
     adapter.set("key", "value")
     assert adapter.get("key") == "value"
     sleep(1)
-    assert adapter.get("key") == None
+    assert adapter.get("key") is None
 
 
 def test_exists():
