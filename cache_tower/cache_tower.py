@@ -4,7 +4,7 @@ from .adapters.base_adapter import BaseAdapter
 from typing import Any, Dict, List, Optional
 
 
-class CachePyramid:
+class CacheTower:
     def __init__(self, config: List[dict]) -> None:
         self._config: List[dict] = config
         self._adapters: List[BaseAdapter] = []
@@ -21,7 +21,7 @@ class CachePyramid:
         adapter_params = adapter_config.copy()
         del adapter_params["adapter"]
         adapter_module = importlib.import_module(
-            f"cache_pyramid.adapters.{adapter_type}_adapter"
+            f"cache_tower.adapters.{adapter_type}_adapter"
         )
         adapter_class = getattr(
             adapter_module, self.__get_class_name(f"{adapter_type}_adapter")

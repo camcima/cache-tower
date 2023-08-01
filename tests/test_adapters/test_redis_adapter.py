@@ -1,5 +1,5 @@
 from typing import Iterator
-from cache_pyramid.adapters.redis_adapter import RedisAdapter
+from cache_tower.adapters.redis_adapter import RedisAdapter
 import pytest
 import redis
 

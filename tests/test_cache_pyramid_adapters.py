@@ -1,31 +1,31 @@
-from cache_pyramid.adapters.memory_adapter import MemoryAdapter
-from cache_pyramid.adapters.redis_adapter import RedisAdapter
-from cache_pyramid.cache_pyramid import CachePyramid
+from cache_tower.adapters.memory_adapter import MemoryAdapter
+from cache_tower.adapters.redis_adapter import RedisAdapter
+from cache_tower.cache_tower import CacheTower
 import pytest
 
 
 def test_initialize_class():
     with pytest.raises(TypeError):
-        CachePyramid()  # Invalid initialization
+        CacheTower()  # Invalid initialization
 
-    zero_layer_cache = CachePyramid({})
-    assert isinstance(zero_layer_cache, CachePyramid)
+    zero_layer_cache = CacheTower({})
+    assert isinstance(zero_layer_cache, CacheTower)
 
-    one_layer_cache = CachePyramid([{"adapter": "memory"}])
-    assert isinstance(one_layer_cache, CachePyramid)
+    one_layer_cache = CacheTower([{"adapter": "memory"}])
+    assert isinstance(one_layer_cache, CacheTower)
     assert len(one_layer_cache.getAdapters()) == 1
 
-    two_layer_cache = CachePyramid([{"adapter": "memory"}, {"adapter": "memory"}])
-    assert isinstance(two_layer_cache, CachePyramid)
+    two_layer_cache = CacheTower([{"adapter": "memory"}, {"adapter": "memory"}])
+    assert isinstance(two_layer_cache, CacheTower)
     assert len(two_layer_cache.getAdapters()) == 2
 
-    three_layer_cache = CachePyramid(
+    three_layer_cache = CacheTower(
         [{"adapter": "memory"}, {"adapter": "memory"}, {"adapter": "memory"}]
     )
-    assert isinstance(three_layer_cache, CachePyramid)
+    assert isinstance(three_layer_cache, CacheTower)
     assert len(three_layer_cache.getAdapters()) == 3
 
-    redis_cache = CachePyramid(
+    redis_cache = CacheTower(
         [
             {"adapter": "memory", "namespace": "namespace-", "ttl": 60, "params": {}},
             {
@@ -42,7 +42,7 @@ def test_initialize_class():
         ]
     )
     redis_cache_adapters = redis_cache.getAdapters()
-    assert isinstance(three_layer_cache, CachePyramid)
+    assert isinstance(three_layer_cache, CacheTower)
     assert len(redis_cache_adapters) == 2
     assert isinstance(redis_cache_adapters[0], MemoryAdapter)
     assert isinstance(redis_cache_adapters[1], RedisAdapter)
@@ -52,7 +52,7 @@ def test_get_adapters():
     layer0 = MemoryAdapter()
     layer1 = MemoryAdapter()
 
-    cache = CachePyramid({})
+    cache = CacheTower({})
     cache.setAdapter(layer0, 0)
     cache.setAdapter(layer1, 1)
 
@@ -64,7 +64,7 @@ def test_get_adapters():
 
 
 def test_set_adapters_from_empty():
-    cache = CachePyramid([])
+    cache = CacheTower([])
     assert len(cache.getAdapters()) == 0
 
     layer0 = MemoryAdapter()
@@ -79,7 +79,7 @@ def test_set_adapters_from_empty():
 
 
 def test_set_adapter_from_empty():
-    cache = CachePyramid([])
+    cache = CacheTower([])
 
     layer0 = MemoryAdapter()
     layer1 = MemoryAdapter()
@@ -103,7 +103,7 @@ def test_set_adapter():
     layer0 = MemoryAdapter()
     layer1 = MemoryAdapter()
 
-    cache = CachePyramid([])
+    cache = CacheTower([])
     cache.setAdapters([layer0, layer1])
     adapters = cache.getAdapters()
     assert adapters[0] is layer0

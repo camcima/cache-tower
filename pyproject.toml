@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "cache-pyramid"
+name = "cache-tower"
 version = "0.1.0"
 description = ""
 authors = ["Carlos Cima <carlos.cima@loggi.com>"]
 readme = "README.md"
-packages = [{include = "cache_pyramid"}]
+packages = [{include = "cache_tower"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"

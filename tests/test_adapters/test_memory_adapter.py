@@ -1,5 +1,5 @@
 from time import sleep
-from cache_pyramid.adapters.memory_adapter import MemoryAdapter
+from cache_tower.adapters.memory_adapter import MemoryAdapter
 
 
 def test_set_and_get():

@@ -1,10 +1,10 @@
-from cache_pyramid.adapters.memory_adapter import MemoryAdapter
-from cache_pyramid.cache_pyramid import CachePyramid
+from cache_tower.adapters.memory_adapter import MemoryAdapter
+from cache_tower.cache_tower import CacheTower
 
 
 def test_exists_one_layer():
     layer0 = MemoryAdapter()
-    cache = CachePyramid([])
+    cache = CacheTower([])
     cache.setAdapters([layer0])
 
     layer0.set("key", "value")
@@ -14,7 +14,7 @@ def test_exists_one_layer():
 def test_exists_two_layers():
     layer0 = MemoryAdapter()
     layer1 = MemoryAdapter()
-    cache = CachePyramid([])
+    cache = CacheTower([])
     cache.setAdapters([layer0, layer1])
 
     layer0.set("key", "value")
@@ -32,7 +32,7 @@ def test_exists_three_layers():
     layer0 = MemoryAdapter()
     layer1 = MemoryAdapter()
     layer2 = MemoryAdapter()
-    cache = CachePyramid([])
+    cache = CacheTower([])
     cache.setAdapters([layer0, layer1, layer2])
 
     # Layer 0
