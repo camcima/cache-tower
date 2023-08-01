@@ -54,10 +54,7 @@ jobs:
           poetry run mypy cache_pyramid
       - name: Test with pytest
         run: |
-          poetry run pytest --cov=cache_pyramid tests/
-      - name: Code coverage
-        run: |
-          poetry run coverage run -m tests
+          poetry run pytest --cov=cache_pyramid --cov-report=xml tests/
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
