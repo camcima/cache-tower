@@ -5,7 +5,7 @@ import pytest
 
 def test_initialize_class():
     with pytest.raises(TypeError):
-        invalid_cache = CachePyramid()
+        CachePyramid() # Invalid initialization
 
     empty_cache = CachePyramid([])
     assert isinstance(empty_cache, CachePyramid)
