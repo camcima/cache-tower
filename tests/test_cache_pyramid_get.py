@@ -22,7 +22,7 @@ def test_get_two_layers():
 
     # Testing layer 1
     layer0.delete("key")
-    assert layer0.get("key") == None
+    assert layer0.get("key") is None
     layer1.set("key", "value")
     assert cache.get("key") == "value"
     assert layer0.get("key") == "value"
@@ -40,17 +40,17 @@ def test_get_three_layers():
 
     # Testing layer 1
     layer0.delete("key")
-    assert layer0.get("key") == None
+    assert layer0.get("key") is None
     layer1.set("key", "value")
     assert cache.get("key") == "value"
     assert layer0.get("key") == "value"
     assert layer1.get("key") == "value"
-    assert layer2.get("key") == None
+    assert layer2.get("key") is None
 
     # Testing layer 2
     layer0.delete("key")
     layer1.delete("key")
-    assert layer0.get("key") == None
+    assert layer0.get("key") is None
     layer2.set("key", "value")
     assert cache.get("key") == "value"
     assert layer0.get("key") == "value"

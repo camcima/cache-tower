@@ -12,7 +12,7 @@ def test_set_and_get():
 def test_get_not_exists():
     adapter = MemoryAdapter()
 
-    assert adapter.get("foo") == None
+    assert adapter.get("foo") is None
 
 
 def test_exists():
@@ -33,7 +33,7 @@ def test_delete():
     adapter.delete("key")
 
     assert not adapter.exists("key")
-    assert adapter.get("key") == None
+    assert adapter.get("key") is None
 
 
 def test_mget():
@@ -76,6 +76,6 @@ def test_flush():
     assert not adapter.exists("key1")
     assert not adapter.exists("key2")
     assert not adapter.exists("key3")
-    assert adapter.get("key1") == None
-    assert adapter.get("key2") == None
-    assert adapter.get("key3") == None
+    assert adapter.get("key1") is None
+    assert adapter.get("key2") is None
+    assert adapter.get("key3") is None

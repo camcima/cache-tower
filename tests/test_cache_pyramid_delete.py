@@ -11,7 +11,7 @@ def test_delete_one_layer():
 
     cache.delete("key")
     assert not cache.exists("key")
-    assert cache.get("key") == None
+    assert cache.get("key") is None
     assert not layer0.exists("key")
 
 
@@ -26,7 +26,7 @@ def test_delete_two_layers():
 
     cache.delete("key")
     assert not cache.exists("key")
-    assert cache.get("key") == None
+    assert cache.get("key") is None
     assert not layer0.exists("key")
     assert not layer1.exists("key")
 
@@ -44,7 +44,7 @@ def test_delete_three_layers():
 
     cache.delete("key")
     assert not cache.exists("key")
-    assert cache.get("key") == None
+    assert cache.get("key") is None
     assert not layer0.exists("key")
     assert not layer1.exists("key")
     assert not layer2.exists("key")

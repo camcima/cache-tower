@@ -30,9 +30,9 @@ def test_mget_two_layers():
     assert result["key1"] == "value1"
     assert result["key2"] == "value2"
     assert len(result) == 2
-    assert layer1.get("key1") == None
-    assert layer1.get("key2") == None
-    assert layer1.get("key3") == None
+    assert layer1.get("key1") is None
+    assert layer1.get("key2") is None
+    assert layer1.get("key3") is None
 
     # Testing layer 1
     layer0.flush()
@@ -47,7 +47,7 @@ def test_mget_two_layers():
     assert len(result) == 2
     assert layer0.get("key1") == "value1"
     assert layer0.get("key2") == "value2"
-    assert layer0.get("key3") == None
+    assert layer0.get("key3") is None
 
 
 def test_mget_three_layers():
@@ -65,12 +65,12 @@ def test_mget_three_layers():
     assert result["key1"] == "value1"
     assert result["key2"] == "value2"
     assert len(result) == 2
-    assert layer1.get("key1") == None
-    assert layer1.get("key2") == None
-    assert layer1.get("key3") == None
-    assert layer2.get("key1") == None
-    assert layer2.get("key2") == None
-    assert layer2.get("key3") == None
+    assert layer1.get("key1") is None
+    assert layer1.get("key2") is None
+    assert layer1.get("key3") is None
+    assert layer2.get("key1") is None
+    assert layer2.get("key2") is None
+    assert layer2.get("key3") is None
 
     # Testing layer 1
     layer0.flush()
@@ -84,10 +84,10 @@ def test_mget_three_layers():
     assert len(result) == 2
     assert layer0.get("key1") == "value1"
     assert layer0.get("key2") == "value2"
-    assert layer0.get("key3") == None
-    assert layer2.get("key1") == None
-    assert layer2.get("key2") == None
-    assert layer2.get("key3") == None
+    assert layer0.get("key3") is None
+    assert layer2.get("key1") is None
+    assert layer2.get("key2") is None
+    assert layer2.get("key3") is None
 
     # Testing layer 2
     layer0.flush()
@@ -102,7 +102,7 @@ def test_mget_three_layers():
     assert len(result) == 2
     assert layer0.get("key1") == "value1"
     assert layer0.get("key2") == "value2"
-    assert layer0.get("key3") == None
+    assert layer0.get("key3") is None
     assert layer1.get("key1") == "value1"
     assert layer1.get("key2") == "value2"
-    assert layer1.get("key3") == None
+    assert layer1.get("key3") is None

@@ -94,6 +94,6 @@ def test_flush():
     assert not adapter.exists("key1")
     assert not adapter.exists("key2")
     assert not adapter.exists("key3")
-    assert adapter.get("key1") == None
-    assert adapter.get("key2") == None
-    assert adapter.get("key3") == None
+    assert adapter.get("key1") is None
+    assert adapter.get("key2") is None
+    assert adapter.get("key3") is None
