@@ -52,3 +52,10 @@ jobs:
       - name: MyPy
         run: |
           poetry run mypy cache_pyramid
+      - name: Test with pytest
+        run: |
+          poetry run pytest --cov=cache_pyramid
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
