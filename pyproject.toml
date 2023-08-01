@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "cache_pyramid"}]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 redis = "^4.6.0"
 
 [tool.poetry.group.dev.dependencies]
