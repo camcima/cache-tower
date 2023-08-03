@@ -50,7 +50,7 @@ jobs:
       - name: Install dependencies
         run: |
           poetry lock
-          poetry install
+          poetry install --all-extras
       - name: Flake8
         run: |
           poetry run flake8
