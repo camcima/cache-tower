@@ -64,10 +64,10 @@ The programmatic method involves creating an empty cache service and adding laye
 
 ```python
 cache = CacheTower()
-cache.addLayer(
+cache.add_layer(
     MemoryAdapter(params={"maxsize": 1024, "lru": True}, namespace="session:", ttl=60)
 )
-cache.addLayer(
+cache.add_layer(
     RedisAdapter(
         params={"host": "localhost", "port": 6379, "db": 0, "decode_responses": True},
         namespace="session:",
@@ -93,41 +93,41 @@ result = cache.get("key")
 
 ### Layer Methods
 
-#### `addLayer(adapter: BaseAdapter) -> None`
+#### `add_layer(adapter: BaseAdapter) -> None`
 
 This method adds a new caching layer to the top of the stack. This layer will be the last one to be used in the event of a cache miss in the lower-level layers.
 
 ```python
 cache = CacheTower()
-cache.addLayer(MemoryAdapter())
+cache.add_layer(MemoryAdapter())
 ```
 
-#### `getLayers() -> List[BaseAdapter]`
+#### `get_layers() -> List[BaseAdapter]`
 
 This method returns a list of the current cache adapter stack. The adapters in the lower positions are used first.
 
 ```python
 cache = CacheTower([{"adapter": "memory"}, {"adapter": "redis}])
 
-layers = cache.getLayers()
+layers = cache.get_layers()
 
 # layers == [MemoryAdapter(), RedisAdapter()]
 ```
 
-#### `setLayers(adapters: List[BaseAdapter]) -> None`
+#### `set_layers(adapters: List[BaseAdapter]) -> None`
 
 This method resets the cache adapter stack to the provided adapter list.
 
 ```python
 cache = CacheTower([{"adapter": "memory"}, {"adapter": "redis}])
 
-cache.setLayers([MemoryAdapter()])
+cache.set_layers([MemoryAdapter()])
 
 layers = cache.getLayers()
 # layers == [MemoryAdapter()]
 ```
 
-#### `setLayer(adapter: BaseAdapter, position: int) -> None`
+#### `set_layer(adapter: BaseAdapter, position: int) -> None`
 
 This method creates or replaces the cache adapter in a specific position in the stack. If the given position is occupied, the existing adapter will be replaced. If the position is at the end of the stack, the adapter will be appended. Invalid positions will result in an `IndexError`.
 
@@ -135,17 +135,17 @@ This method creates or replaces the cache adapter in a specific position in the 
 # Replaces adapter
 cache = CacheTower([{"adapter": "memory"}, {"adapter": "redis}])
 
-cache.setLayer([MemoryAdapter()], 1)
+cache.set_layer([MemoryAdapter()], 1)
 
-layers = cache.getLayers()
+layers = cache.get_layers()
 # layers == [MemoryAdapter(), MemoryAdapter()]
 
 # Adds adapter
 cache = CacheTower([{"adapter": "memory"}, {"adapter": "redis}])
 
-cache.setLayer([MemoryAdapter()], 2)
+cache.set_layer([MemoryAdapter()], 2)
 
-layers = cache.getLayers()
+layers = cache.get_layers()
 # layers == [MemoryAdapter(), RedisAdapter(), MemoryAdapter()]
 
 ```
