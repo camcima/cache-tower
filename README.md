@@ -123,7 +123,7 @@ cache = CacheTower([{"adapter": "memory"}, {"adapter": "redis}])
 
 cache.set_layers([MemoryAdapter()])
 
-layers = cache.getLayers()
+layers = cache.get_layers()
 # layers == [MemoryAdapter()]
 ```
 
