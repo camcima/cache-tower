@@ -79,11 +79,11 @@ def test_mget(memcached_client: Client):
     result = adapter.mget(["key1", "key4", "key2"])
 
     assert "key1" in result
-    assert result["key1"] == b"value1"
+    assert result["key1"] == "value1"
     assert "key4" in result
     assert result["key4"] is None
     assert "key2" in result
-    assert result["key2"] == b"value2"
+    assert result["key2"] == "value2"
     assert len(result) == 3
 
 

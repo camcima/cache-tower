@@ -31,11 +31,6 @@ class MemcachedAdapter(BaseAdapter):
     ) -> Dict[str, Optional[Any]]:
         return {key: self._encode(value) for key, value in items.items()}  # type: ignore
 
-    def _decode_values(
-        self, items: Dict[str, Optional[Any]]
-    ) -> Dict[str, Optional[Any]]:
-        return {key: self._decode(value) for key, value in items.items()}  # type: ignore
-
     def get(self, key: str) -> Any:
         return self._decode(self._memcached_client.get(self._create_key(key)))
 
@@ -44,9 +39,9 @@ class MemcachedAdapter(BaseAdapter):
         items = self._memcached_client.get_many(namespaced_keys)
 
         namespace_len = len(self._namespace)
-        result = {}
+        result: Dict[str, Optional[Any]] = {}
         for key in namespaced_keys:
-            result[key[namespace_len:]] = items.get(key, None)
+            result[key[namespace_len:]] = self._decode(items.get(key, None))
         return result
 
     def set(self, key: str, value: Any) -> None:
