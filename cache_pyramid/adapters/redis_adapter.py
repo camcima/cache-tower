@@ -16,10 +16,13 @@ class RedisAdapter(BaseAdapter):
         return dict(zip(keys, values))
 
     def set(self, key: str, value: Any) -> None:
-        self.redis_client.set(self._create_key(key), value)
+        self.redis_client.set(self._create_key(key), value, ex=self._ttl)
 
     def mset(self, items: Dict[str, Any]) -> None:
         self.redis_client.mset(self._create_items(items))  # type: ignore
+        if self._ttl > 0:
+            for key in items:
+                self.redis_client.expire(self._create_key(key), self._ttl)
 
     def delete(self, key: str) -> None:
         self.redis_client.delete(self._create_key(key))

@@ -1,22 +1,76 @@
+from time import sleep
 from cache_pyramid.adapters.memory_adapter import MemoryAdapter
 
 
 def test_set_and_get():
-    adapter = MemoryAdapter([], "namespace-")
+    adapter = MemoryAdapter({}, "namespace:")
 
     adapter.set("key", "value")
 
     assert adapter.get("key") == "value"
 
 
+def test_set_maxsize():
+    adapter = MemoryAdapter({"maxsize": 2}, "namespace:")
+
+    adapter.set("key1", "value1")
+    assert adapter.get("key1") == "value1"
+
+    adapter.set("key2", "value2")
+    assert adapter.get("key2") == "value2"
+    assert adapter.get("key1") == "value1"
+
+    adapter.set("key3", "value3")
+    assert adapter.get("key1") is None
+    assert adapter.get("key3") == "value3"
+    assert adapter.get("key2") == "value2"
+
+    adapter.set("key4", "value4")
+    assert adapter.get("key1") is None
+    assert adapter.get("key2") is None
+    assert adapter.get("key3") == "value3"
+    assert adapter.get("key4") == "value4"
+
+
+def test_set_maxsize_lru():
+    adapter = MemoryAdapter({"maxsize": 2, "lru": True}, "namespace:")
+
+    adapter.set("key1", "value1")
+    assert adapter.get("key1") == "value1"
+
+    adapter.set("key2", "value2")
+    assert adapter.get("key2") == "value2"
+    assert adapter.get("key1") == "value1"
+
+    adapter.set("key3", "value3")
+    assert adapter.get("key3") == "value3"
+    assert adapter.get("key1") == "value1"
+    assert adapter.get("key2") is None
+
+    adapter.set("key4", "value4")
+    assert adapter.get("key1") == "value1"
+    assert adapter.get("key2") is None
+    assert adapter.get("key3") is None
+    assert adapter.get("key4") == "value4"
+
+
 def test_get_not_exists():
-    adapter = MemoryAdapter([], "namespace-")
+    adapter = MemoryAdapter({}, "namespace:")
 
     assert adapter.get("foo") is None
 
 
+def test_get_expired_key():
+    adapter = MemoryAdapter({}, "namespace:", 1)
+
+    adapter.set("key", "value")
+    assert adapter.get("key") == "value"
+    sleep(1)
+    assert adapter.get("key") is None
+
+
 def test_exists():
-    adapter = MemoryAdapter([], "namespace-")
+    adapter = MemoryAdapter({}, "namespace:")
 
     assert not adapter.exists("key")
 
@@ -26,7 +80,7 @@ def test_exists():
 
 
 def test_delete():
-    adapter = MemoryAdapter([], "namespace-")
+    adapter = MemoryAdapter({}, "namespace:")
 
     adapter.set("key", "value")
 
@@ -37,7 +91,7 @@ def test_delete():
 
 
 def test_mget():
-    adapter = MemoryAdapter([], "namespace-")
+    adapter = MemoryAdapter({}, "namespace:")
 
     adapter.set("key1", "value1")
     adapter.set("key2", "value2")
@@ -53,7 +107,7 @@ def test_mget():
 
 
 def test_mset():
-    adapter = MemoryAdapter([], "namespace-")
+    adapter = MemoryAdapter({}, "namespace:")
 
     adapter.mset({"key1": "value1", "key2": "value2"})
 
@@ -64,7 +118,7 @@ def test_mset():
 
 
 def test_flush():
-    adapter = MemoryAdapter([], "namespace-")
+    adapter = MemoryAdapter({}, "namespace:")
 
     adapter.set("key1", "value1")
     adapter.mset({"key2": "value2", "key3": "value3"})
