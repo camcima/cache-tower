@@ -4,7 +4,8 @@ from cache_pyramid.cache_pyramid import CachePyramid
 
 def test_set_one_layer():
     layer0 = MemoryAdapter()
-    cache = CachePyramid([layer0])
+    cache = CachePyramid([])
+    cache.setAdapters([layer0])
 
     cache.set("key", "value")
 
@@ -18,7 +19,8 @@ def test_set_one_layer():
 def test_set_two_layers():
     layer0 = MemoryAdapter()
     layer1 = MemoryAdapter()
-    cache = CachePyramid([layer0, layer1])
+    cache = CachePyramid([])
+    cache.setAdapters([layer0, layer1])
 
     cache.set("key", "value")
 
@@ -35,7 +37,8 @@ def test_set_three_layers():
     layer0 = MemoryAdapter()
     layer1 = MemoryAdapter()
     layer2 = MemoryAdapter()
-    cache = CachePyramid([layer0, layer1, layer2])
+    cache = CachePyramid([])
+    cache.setAdapters([layer0, layer1, layer2])
 
     cache.set("key", "value")
 
