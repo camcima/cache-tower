@@ -20,7 +20,6 @@ def test_get(redis_client: redis.Redis):
     )
 
     redis_client.set("namespace:key", "value")
-    print(redis_client.keys())
 
     assert redis_client.get("namespace:key") == "value"
     assert adapter.get("key") == "value"
