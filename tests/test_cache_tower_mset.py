@@ -5,7 +5,7 @@ from cache_tower.cache_tower import CacheTower
 def test_mset_one_layer():
     layer0 = MemoryAdapter()
     cache = CacheTower([])
-    cache.setLayers([layer0])
+    cache.set_layers([layer0])
 
     cache.mset({"key1": "value1", "key2": "value2"})
 
@@ -22,7 +22,7 @@ def test_mset_two_layers():
     layer0 = MemoryAdapter()
     layer1 = MemoryAdapter()
     cache = CacheTower([])
-    cache.setLayers([layer0, layer1])
+    cache.set_layers([layer0, layer1])
 
     cache.mset({"key1": "value1", "key2": "value2"})
 
@@ -44,7 +44,7 @@ def test_mset_three_layers():
     layer1 = MemoryAdapter()
     layer2 = MemoryAdapter()
     cache = CacheTower([])
-    cache.setLayers([layer0, layer1, layer2])
+    cache.set_layers([layer0, layer1, layer2])
 
     cache.mset({"key1": "value1", "key2": "value2"})
 

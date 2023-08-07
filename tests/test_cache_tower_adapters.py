@@ -132,7 +132,7 @@ def test_set_layer():
     new_layer0 = MemoryAdapter()
     cache.set_layer(new_layer0, 0)
     adapters = cache.get_layers()
-    assert not adapters[0] is layer0
+    assert adapters[0] is not layer0
     assert adapters[0] is new_layer0
     assert adapters[1] is layer1
     assert len(adapters) == 2
@@ -140,8 +140,8 @@ def test_set_layer():
     new_layer1 = MemoryAdapter()
     cache.set_layer(new_layer1, 1)
     adapters = cache.get_layers()
-    assert not adapters[0] is layer0
+    assert adapters[0] is not layer0
     assert adapters[0] is new_layer0
-    assert not adapters[1] is layer1
+    assert adapters[1] is not layer1
     assert adapters[1] is new_layer1
     assert len(adapters) == 2

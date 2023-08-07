@@ -5,7 +5,7 @@ from cache_tower.cache_tower import CacheTower
 def test_exists_one_layer():
     layer0 = MemoryAdapter()
     cache = CacheTower([])
-    cache.setLayers([layer0])
+    cache.set_layers([layer0])
 
     layer0.set("key", "value")
     assert cache.exists("key")
@@ -15,7 +15,7 @@ def test_exists_two_layers():
     layer0 = MemoryAdapter()
     layer1 = MemoryAdapter()
     cache = CacheTower([])
-    cache.setLayers([layer0, layer1])
+    cache.set_layers([layer0, layer1])
 
     layer0.set("key", "value")
     assert cache.exists("key")
@@ -33,7 +33,7 @@ def test_exists_three_layers():
     layer1 = MemoryAdapter()
     layer2 = MemoryAdapter()
     cache = CacheTower([])
-    cache.setLayers([layer0, layer1, layer2])
+    cache.set_layers([layer0, layer1, layer2])
 
     # Layer 0
     layer0.set("key", "value")

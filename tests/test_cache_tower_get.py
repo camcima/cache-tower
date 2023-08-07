@@ -5,7 +5,7 @@ from cache_tower.cache_tower import CacheTower
 def test_get_one_layer():
     layer0 = MemoryAdapter()
     cache = CacheTower([])
-    cache.setLayers([layer0])
+    cache.set_layers([layer0])
 
     layer0.set("key", "value")
 
@@ -16,7 +16,7 @@ def test_get_two_layers():
     layer0 = MemoryAdapter()
     layer1 = MemoryAdapter()
     cache = CacheTower([])
-    cache.setLayers([layer0, layer1])
+    cache.set_layers([layer0, layer1])
 
     # Testing layer 0
     layer0.set("key", "value")
@@ -35,7 +35,7 @@ def test_get_three_layers():
     layer1 = MemoryAdapter()
     layer2 = MemoryAdapter()
     cache = CacheTower([])
-    cache.setLayers([layer0, layer1, layer2])
+    cache.set_layers([layer0, layer1, layer2])
 
     # Testing layer 0
     layer0.set("key", "value")
