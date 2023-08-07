@@ -31,16 +31,16 @@ class CacheTower:
     def __get_class_name(self, module_name: str) -> str:
         return string.capwords(module_name.replace("_", " ")).replace(" ", "")
 
-    def addLayer(self, adapter: BaseAdapter) -> None:
+    def add_layer(self, adapter: BaseAdapter) -> None:
         self._adapters.append(adapter)
 
-    def getLayers(self) -> List[BaseAdapter]:
+    def get_layers(self) -> List[BaseAdapter]:
         return self._adapters
 
-    def setLayers(self, adapters: List[BaseAdapter]) -> None:
+    def set_layers(self, adapters: List[BaseAdapter]) -> None:
         self._adapters = adapters
 
-    def setLayer(self, adapter: BaseAdapter, position: int) -> None:
+    def set_layer(self, adapter: BaseAdapter, position: int) -> None:
         if position > len(self._adapters):
             raise IndexError
         if position == len(self._adapters):
