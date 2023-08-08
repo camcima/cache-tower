@@ -97,13 +97,15 @@ def test_mget():
     adapter.set("key2", "value2")
     adapter.set("key3", "value3")
 
-    values = adapter.mget(["key1", "key2"])
+    values = adapter.mget(["key1", "key4", "key2"])
 
     assert "key1" in values
     assert "key2" in values
+    assert "key4" in values
     assert values["key1"] == "value1"
     assert values["key2"] == "value2"
-    assert len(values) == 2
+    assert values["key4"] is None
+    assert len(values) == 3
 
 
 def test_mset():

@@ -75,13 +75,15 @@ def test_mget(redis_client: redis.Redis):
     assert redis_client.get("namespace:key2") == "value2"
     assert redis_client.get("namespace:key3") == "value3"
 
-    result = adapter.mget(["key1", "key2"])
+    result = adapter.mget(["key1", "key4", "key2"])
 
     assert "key1" in result
     assert result["key1"] == "value1"
     assert "key2" in result
     assert result["key2"] == "value2"
-    assert len(result) == 2
+    assert "key4" in result
+    assert result["key4"] is None
+    assert len(result) == 3
 
 
 def test_mset(redis_client: redis.Redis):
