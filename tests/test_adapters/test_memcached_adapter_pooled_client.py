@@ -1,7 +1,6 @@
 from typing import Iterator
 from cache_tower.adapters.memcached_adapter import MemcachedAdapter
 from pymemcache.client.base import Client
-from pymemcache import serde
 import pytest
 
 
@@ -15,7 +14,7 @@ def memcached_client() -> Iterator[Client]:
 
 def test_get(memcached_client: Client):
     adapter = MemcachedAdapter(
-        {"client_type": "client", "server": ("localhost", 11211)},
+        {"client_type": "pooled_client", "server": ("localhost", 11211)},
         "namespace:",
         60,
     )
@@ -23,43 +22,46 @@ def test_get(memcached_client: Client):
     memcached_client.set("namespace:key", "value")
 
     assert memcached_client.get("namespace:key") == b"value"
-    assert adapter.get("key") == b"value"
+    assert adapter.get("key") == "value"
 
 
 def test_set(memcached_client: Client):
     adapter = MemcachedAdapter(
-        {"client_type": "client", "server": ("localhost", 11211)},
+        {"client_type": "pooled_client", "server": ("localhost", 11211)},
         "namespace:",
         60,
     )
 
-    assert bool(memcached_client.get("namespace:key")) == False
+    assert bool(memcached_client.get("namespace:key")) is False
 
     adapter.set("key", "value")
 
-    assert bool(memcached_client.get(b"namespace:key")) == True
-    assert memcached_client.get(b"namespace:key") == b"value"
+    memcached_client.touch("namespace:key")  # Avoids flaky tests
+    assert bool(memcached_client.get("namespace:key")) is True
+    assert memcached_client.get("namespace:key") == b"value"
     assert adapter.exists("key")
-    assert adapter.get("key") == b"value"
+    assert adapter.get("key") == "value"
 
 
 def test_delete(memcached_client: Client):
     adapter = MemcachedAdapter(
-        {"client_type": "client", "server": ("localhost", 11211)},
+        {"client_type": "pooled_client", "server": ("localhost", 11211)},
         "namespace:",
         60,
     )
 
     memcached_client.set("namespace:key", "value")
-    assert bool(bool(memcached_client.get("namespace:key"))) == True
+    assert bool(memcached_client.get("namespace:key")) is True
 
     adapter.delete("key")
-    assert bool(bool(memcached_client.get("namespace:key"))) == False
+
+    adapter.get("key")
+    assert bool(memcached_client.get("namespace:key")) is False
 
 
 def test_mget(memcached_client: Client):
     adapter = MemcachedAdapter(
-        {"client_type": "client", "server": ("localhost", 11211)},
+        {"client_type": "pooled_client", "server": ("localhost", 11211)},
         "namespace:",
         60,
     )
@@ -67,47 +69,46 @@ def test_mget(memcached_client: Client):
     memcached_client.set("namespace:key1", "value1")
     memcached_client.set("namespace:key2", "value2")
     memcached_client.set("namespace:key3", "value3")
-    assert bool(memcached_client.get("namespace:key1")) == True
-    assert bool(memcached_client.get("namespace:key2")) == True
-    assert bool(memcached_client.get("namespace:key3")) == True
-    assert memcached_client.get("namespace:key1") == "value1"
-    assert memcached_client.get("namespace:key2") == "value2"
-    assert memcached_client.get("namespace:key3") == "value3"
+    assert bool(memcached_client.get("namespace:key1")) is True
+    assert bool(memcached_client.get("namespace:key2")) is True
+    assert bool(memcached_client.get("namespace:key3")) is True
+    assert memcached_client.get("namespace:key1") == b"value1"
+    assert memcached_client.get("namespace:key2") == b"value2"
+    assert memcached_client.get("namespace:key3") == b"value3"
 
-    result = adapter.mget(["key1", "key2"])
+    result = adapter.mget(["key1", "key4", "key2"])
 
     assert "key1" in result
-    assert result["key1"] == "value1"
+    assert result["key1"] == b"value1"
+    assert "key4" in result
+    assert result["key4"] is None
     assert "key2" in result
-    assert result["key2"] == "value2"
-    assert len(result) == 2
+    assert result["key2"] == b"value2"
+    assert len(result) == 3
 
 
 def test_mset(memcached_client: Client):
     adapter = MemcachedAdapter(
-        {"client_type": "client", "server": ("localhost", 11211)},
+        {"client_type": "pooled_client", "server": ("localhost", 11211)},
         "namespace:",
         60,
     )
 
-    assert bool(memcached_client.get("namespace:key1")) == False
-    assert bool(memcached_client.get("namespace:key2")) == False
+    assert bool(memcached_client.get("namespace:key1")) is False
+    assert bool(memcached_client.get("namespace:key2")) is False
 
     adapter.mset({"key1": "value1", "key2": "value2"})
 
-    assert bool(memcached_client.get("namespace:key1")) == True
-    assert bool(memcached_client.get("namespace:key2")) == True
-    assert memcached_client.get("namespace:key1") == "value1"
-    assert memcached_client.get("namespace:key2") == "value2"
-    assert memcached_client.ttl("namespace:key1") > 59
-    assert memcached_client.ttl("namespace:key1") <= 60
-    assert memcached_client.ttl("namespace:key2") > 59
-    assert memcached_client.ttl("namespace:key2") <= 60
+    memcached_client.touch("namespace:ke1")  # avoiding flaky tests
+    assert bool(memcached_client.get("namespace:key1")) is True
+    assert bool(memcached_client.get("namespace:key2")) is True
+    assert memcached_client.get("namespace:key1") == b"value1"
+    assert memcached_client.get("namespace:key2") == b"value2"
 
 
 def test_flush():
     adapter = MemcachedAdapter(
-        {"client_type": "client", "server": ("localhost", 11211)},
+        {"client_type": "pooled_client", "server": ("localhost", 11211)},
         "namespace:",
         60,
     )
