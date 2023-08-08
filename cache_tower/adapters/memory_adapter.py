@@ -28,9 +28,7 @@ class MemoryAdapter(BaseAdapter):
     def mget(self, keys: List[str]) -> Dict[str, Optional[Any]]:
         values = {}
         for key in keys:
-            value = self.get(key)
-            if value:
-                values[key] = value
+            values[key] = self.get(key)
         return values
 
     def set(self, key: str, value: Any) -> None:
