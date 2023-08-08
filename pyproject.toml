@@ -27,3 +27,7 @@ ruff = "^0.0.282"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+# Allow lines to be as long as 120 characters.
+line-length = 90
